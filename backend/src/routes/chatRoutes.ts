@@ -1,5 +1,5 @@
 import express from 'express';
-import { getChatCount, getUserCount } from "../controllers/UserControllers";
+import { getChatCount, getUserCount } from "../controllers/chatControllers";
 
 const router = express.Router();
 

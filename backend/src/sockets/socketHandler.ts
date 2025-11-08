@@ -30,7 +30,7 @@ export const socketHandler = (io: Server) => {
           _id: chat._id,
           user: chat.user,
           message: chat.message,
-          createdAt: chat.createdAt,
+       createdAt: chat.createdAt?.toISOString(), 
         });
       } catch (error) {
         console.error(error);

@@ -1,26 +1,30 @@
-import * as express from 'express';
+import express from 'express';
+import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import connectDB from './config/db';
 import userRoutes from './routes/userRoutes';
 import chatRoutes from './routes/chatRoutes';
+import dotenv from 'dotenv';
+import connectDB from './config/db';
 import { socketHandler } from './sockets/socketHandler';
 
 dotenv.config();
 
-const app = express();
+const app = express(); // ✅ full express app
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  },
 });
 
 // Connect to MongoDB
 connectDB();
+app.get('/', (req, res) => {
+  res.send('Backend is running!');
+});
+
 
 // Middleware
 app.use(cors());
