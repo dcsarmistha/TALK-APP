@@ -29,7 +29,19 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-purple-500">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-10 space-y-6">
-        <h2 className="text-center text-3xl font-bold text-gray-800">
+        {/* Welcome message */}
+        <div className="text-center mb-4">
+          <h1 className="text-4xl font-extrabold text-indigo-600 animate-pulse">
+            💬 Welcome to Chat App
+          </h1>
+          <p className="text-gray-600 mt-2 text-sm sm:text-base">
+            {isLogin
+              ? 'Sign in to join the chat and connect instantly!'
+              : 'Create your account to start chatting in real time!'}
+          </p>
+        </div>
+
+        <h2 className="text-center text-2xl font-bold text-gray-800">
           {isLogin ? 'Sign in to ChatApp' : 'Create your account'}
         </h2>
 
