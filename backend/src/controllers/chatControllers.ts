@@ -19,3 +19,13 @@ export const getUserCount = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+export const getChatHistory = async (req: Request, res: Response) => {
+  try {
+    const chats = await Chat.find()
+      .populate('user', 'name')
+      .sort({ createdAt: 1 }); // oldest first
+    res.json(chats);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};

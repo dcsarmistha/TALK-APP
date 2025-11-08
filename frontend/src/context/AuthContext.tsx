@@ -17,6 +17,7 @@ interface AuthContextType {
   loading: boolean;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -39,34 +40,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, {
-      email,
-      password
-    });
+const login = async (email: string, password: string) => {
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/login`, {
+    email,
+    password
+  });
 
-    const { token, user: userData } = response.data;
-    
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(userData);
-  };
+  const { token, _id, name, email: userEmail } = response.data;
+  const userData = { id: _id, name, email: userEmail };
 
-  const register = async (name: string, email: string, password: string) => {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, {
-      name,
-      email,
-      password
-    });
+  localStorage.setItem('token', token);
+  localStorage.setItem('user', JSON.stringify(userData));
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  setUser(userData);
+};
 
-    const { token, user: userData } = response.data;
-    
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(userData);
-  };
+
+ const register = async (name: string, email: string, password: string) => {
+  const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/register`, {
+    name,
+    email,
+    password
+  });
+
+  const { token, _id, name: userName, email: userEmail } = response.data;
+  const userData = { id: _id, name: userName, email: userEmail };
+
+  localStorage.setItem('token', token);
+  localStorage.setItem('user', JSON.stringify(userData));
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  setUser(userData);
+};
+
 
   const logout = () => {
     localStorage.removeItem('token');
