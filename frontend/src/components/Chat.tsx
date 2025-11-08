@@ -109,71 +109,68 @@ const Chat: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gradient-to-br from-purple-50 to-blue-50">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg hidden sm:block">
-        <div className="p-4 border-b">
-          <h1 className="text-xl font-bold text-gray-800">Chat App</h1>
-          <div className="mt-2 text-sm text-gray-600">Welcome, {user?.name}</div>
+      <div className="w-64 bg-white shadow-lg p-5 hidden md:block rounded-tr-3xl rounded-br-3xl">
+        <h1 className="text-2xl font-bold text-purple-600">ChatApp 💬</h1>
+        <div className="mt-4 flex items-center space-x-2">
+          <span className="w-3 h-3 rounded-full bg-green-400" />
+          <span className="text-gray-700 font-medium">{user?.name} (Online)</span>
         </div>
 
-        <div className="p-4">
-          <h2 className="font-semibold text-gray-700 mb-2">Statistics</h2>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span>Online Users:</span>
-              <span className="font-medium">{onlineUsers}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Total Chats:</span>
-              <span className="font-medium">{totalChats}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Total Users:</span>
-              <span className="font-medium">{totalUsers}</span>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 mt-4"
-          >
-            Logout
-          </button>
+        <div className="mt-6">
+          <h2 className="font-semibold text-gray-600 mb-2">Stats</h2>
+          <ul className="space-y-1 text-gray-700 text-sm">
+            <li>🟢 Online Users: {onlineUsers}</li>
+            <li>💬 Total Chats: {totalChats}</li>
+            <li>👥 Total Users: {totalUsers}</li>
+          </ul>
         </div>
+
+        <button
+          onClick={handleLogout}
+          className="mt-6 w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
+        >
+          Logout
+        </button>
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 flex flex-col relative">
+        <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {messages.map((msg, idx) => {
             const isUserMessage = 'user' in msg && msg.user?._id === user?.id;
             const isOtherUserMessage = 'user' in msg && msg.user?._id !== user?.id;
-            
 
             return (
-              <div
-                key={idx}
-                className={`p-3 rounded-lg max-w-xs lg:max-w-md wrap-break-word ${
-                  isUserMessage
-                    ? 'bg-blue-500 text-white ml-auto text-right'
-                    : isOtherUserMessage
-                    ? 'bg-white border border-gray-200'
-                    : 'bg-yellow-100 border border-yellow-200 text-center italic text-gray-700'
-                }`}
-              >
+              <div key={idx} className="flex flex-col">
                 {'user' in msg ? (
-                  <>
-                    <div className="font-semibold text-sm">
-                      {msg.user._id === user?.id ? 'You' : msg.user.name}
+                  <div className={`flex ${isUserMessage ? 'justify-end' : 'justify-start'}`}>
+                    {!isUserMessage && (
+                      <div className="w-8 h-8 bg-purple-300 rounded-full flex items-center justify-center text-white font-bold mr-2">
+                        {msg.user.name.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <div
+                      className={`px-4 py-2 rounded-2xl max-w-xs break-words shadow ${
+                        isUserMessage
+                          ? 'bg-purple-500 text-white rounded-br-none'
+                          : 'bg-white text-gray-800 rounded-bl-none'
+                      }`}
+                    >
+                      {!isUserMessage && (
+                        <div className="font-semibold text-sm">{msg.user.name}</div>
+                      )}
+                      <div>{msg.message}</div>
+                      <div className="text-xs opacity-70 mt-1 text-right">
+                        {formatTime(msg.createdAt || msg.timestamp)}
+                      </div>
                     </div>
-                    <div className="mt-1">{msg.message}</div>
-                    <div className="text-xs opacity-75 mt-1">{formatTime(msg.createdAt)}</div>
-                  </>
+                  </div>
                 ) : (
-                  <>
-                    <div className="text-sm font-medium">{msg.message}</div>
-                    <div className="text-xs opacity-75 mt-1">{formatTime(msg.timestamp)}</div>
-                  </>
+                  <div className="text-center text-gray-500 italic text-sm">
+                    {msg.message} - {formatTime(msg.timestamp)}
+                  </div>
                 )}
               </div>
             );
@@ -181,24 +178,22 @@ const Chat: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="border-t bg-white p-4">
-          <form onSubmit={sendMessage} className="flex space-x-4">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type your message..."
-              className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              autoFocus
-            />
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:opacity-50"
-              disabled={!newMessage.trim()}
-            >
-              Send
-            </button>
-          </form>
+        {/* Message Input */}
+        <div className="p-4 border-t bg-white flex items-center space-x-4 sticky bottom-0 shadow-md">
+          <input
+            type="text"
+            placeholder="Type your message..."
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+          />
+          <button
+            onClick={sendMessage}
+            className="bg-purple-500 text-white px-6 py-2 rounded-full hover:bg-purple-600 transition disabled:opacity-50"
+            disabled={!newMessage.trim()}
+          >
+            Send
+          </button>
         </div>
       </div>
     </div>
