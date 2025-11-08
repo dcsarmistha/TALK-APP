@@ -11,7 +11,7 @@ export const socketHandler = (io: Server) => {
     });
 
     // Listen for chat message from frontend ('send_message')
-    socket.on('send_message', async (data) => {
+    socket.on('chat message', async (data) => {
       try {
         // Save message to database
         const chat = new Chat({

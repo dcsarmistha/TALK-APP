@@ -9,6 +9,7 @@ import connectDB from './config/db';
 import { socketHandler } from './sockets/socketHandler';
 
 dotenv.config();
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
 
 const app = express(); // ✅ full express app
 const server = http.createServer(app);

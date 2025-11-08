@@ -59,6 +59,7 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+console.log('JWT Secret:', process.env.JWT_SECRET);
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
