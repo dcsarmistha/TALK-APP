@@ -51,7 +51,7 @@ Copy code
 cd backend
 npm install
 Create a .env file:
-ini
+#.env for backend
 Copy code
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
@@ -68,7 +68,7 @@ Copy code
 cd frontend
 npm install
 Create a .env file:
-ini
+#.env for backend
 Copy code
 VITE_API_URL=http://localhost:5000/api
 VITE_SOCKET_URL=http://localhost:5000
@@ -79,7 +79,6 @@ npm run dev
 The frontend will start on http://localhost:5173
 
 🗄️ Folder Structure
-pgsql
 Copy code
 chat-app/
 │
@@ -88,6 +87,7 @@ chat-app/
 │   │   ├── controllers/
 │   │   ├── models/
 │   │   ├── routes/
+         ── middleware/
 │   │   ├── socket/
 │   │   └── server.ts
 │   ├── .env
@@ -97,8 +97,9 @@ chat-app/
     ├── src/
     │   ├── components/
     │   ├── context/
-    │   ├── pages/
+    │   ├── index.css
     │   └── App.tsx
+        └── main.tsx
     ├── .env
     └── package.json
 🧩 API Endpoints
