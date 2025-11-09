@@ -44,10 +44,13 @@ const Chat: React.FC = () => {
 
     setSocket(newSocket);
 
+    // Join the general room immediately
+    newSocket.emit('join room', 'general');
+
     loadChatHistory();
     loadStats();
 
-    newSocket.on('chat message', (msg: Message) => {
+    newSocket.on('new_message', (msg: Message) => {
       setMessages(prev => [...prev, msg]);
     });
 
@@ -94,11 +97,27 @@ const Chat: React.FC = () => {
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (newMessage.trim() && socket && user?.id) {
-      socket.emit('chat message', {
+      const messageData = {
         userId: user.id,
         message: newMessage,
         room: 'general',
-      });
+      };
+
+      // Emit to server
+      socket.emit('chat message', messageData);
+
+      // Add message immediately to UI for sender
+      setMessages(prev => [
+        ...prev,
+        {
+          _id: Date.now().toString(), // temporary id
+          user: { _id: user.id, name: user.name },
+          message: newMessage,
+          room: 'general',
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+
       setNewMessage('');
     }
   };
